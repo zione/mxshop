@@ -16,6 +16,18 @@ Including another URLconf
 # from django.contrib import admin
 from django.urls import path
 
-urlpatterns = [
+import xadmin
+xadmin.autodiscover()
 
+
+from xadmin.plugins import xversion
+xversion.register_models()
+from mxshop.settings import MEDIA_ROOT
+
+from django.conf.urls.static import static
+
+urlpatterns = [
+    path('xadmin/', xadmin.site.urls),
 ]
+
+urlpatterns += static('/media/', document_root=MEDIA_ROOT)  #加上这一行
