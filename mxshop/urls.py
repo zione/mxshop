@@ -26,8 +26,11 @@ from mxshop.settings import MEDIA_ROOT
 
 from django.conf.urls.static import static
 
+from goods.views_base import GoodsListView
+
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
+    path('goods/',GoodsListView.as_view(),name='goods-list'),
 ]
 
 urlpatterns += static('/media/', document_root=MEDIA_ROOT)  #加上这一行
