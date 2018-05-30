@@ -38,3 +38,6 @@ class VerifyCode(models.Model):
 
     def __str__(self):
         return self.code
+
+
+

@@ -23,11 +23,14 @@ xadmin.autodiscover()
 from xadmin.plugins import xversion
 xversion.register_models()
 from mxshop.settings import MEDIA_ROOT
-from rest_framework.documentation import include_docs_urls
 from django.conf.urls.static import static
+from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken import views
+from rest_framework_jwt.views import obtain_jwt_token
 
 from goods.views import GoodsListViewSet, CategoryViewSet
+# from users.views import SmsCodeViewset
 
 router = DefaultRouter()
 
@@ -35,12 +38,18 @@ router = DefaultRouter()
 router.register('goods', GoodsListViewSet, base_name='goods')
 #配置Category的url
 router.register('categorys', CategoryViewSet, base_name='categorys')
+# 短信验证码发送
+# router.register('codes', SmsCodeViewset, base_name='codes')
 
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('', include(router.urls)),
     path('docs/', include_docs_urls(title='暮雪生鲜')),
+    # drf自带token认证模式
+    path('api-token-auth/', views.obtain_auth_token),
+    #
+    path('login/', obtain_jwt_token),
 ]
 
 urlpatterns += static('/media/', document_root=MEDIA_ROOT)  #加上这一行
