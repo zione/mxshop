@@ -34,6 +34,7 @@ AUTH_USER_MODEL = 'users.UserProfile'
 
 # Application definition
 
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -104,7 +105,8 @@ DATABASES = {
         'NAME': "mxshop",
         'USER': 'root',
         'PASSWORD': "hy546800",
-        'HOST': "127.0.0.1",
+        # 'HOST': "127.0.0.1",
+        'HOST': "118.25.26.18",
         "OPTIONS":{"init_command":"SET default_storage_engine=INNODB;"}
     }
 }
