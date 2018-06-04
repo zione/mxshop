@@ -32,7 +32,8 @@ import  DjangoUeditor
 
 from goods.views import GoodsListViewSet, CategoryViewSet
 from users.views import SmsCodeViewset,UserViewset
-from user_operation.views import UserFavViewset
+from trade.views import ShoppingCartViewset,OrderViewset
+from user_operation.views import UserFavViewset, LeavingMessageViewset,AddressViewset
 
 router = DefaultRouter()
 
@@ -45,6 +46,14 @@ router.register('codes', SmsCodeViewset, base_name='codes')
 router.register('users', UserViewset, base_name='users')
 # 收藏
 router.register('userfavs', UserFavViewset, base_name='userfavs')
+# 留言
+router.register('messages', LeavingMessageViewset, base_name='message')
+# 收货地址
+router.register('address', AddressViewset, base_name='address')
+# 购物车
+router.register('shopcarts', ShoppingCartViewset, base_name='shopcarts')
+# 订单
+router.register('orders', OrderViewset, base_name='orders')
 
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
