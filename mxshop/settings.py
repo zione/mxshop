@@ -29,7 +29,7 @@ SECRET_KEY = 'v!to$buk*&x_dx8^69jwz8!j^c^bs@($zbe43r@7rp$d#8@rip'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['118.25.26.18','localhost','127.0.0.1']
 AUTH_USER_MODEL = 'users.UserProfile'
 
 # Application definition
