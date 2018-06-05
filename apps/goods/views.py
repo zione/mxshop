@@ -3,12 +3,13 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework import viewsets
 from rest_framework import mixins
 from rest_framework import filters
+from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
 
-from goods.serializer import GoodsSerializer, CategorySerializer, BannerSerializer, IndexCategorySerializer
-from goods.models import Goods,GoodsCategory,Banner
-from goods.filters import GoodsFilter
+from .serializer import GoodsSerializer, CategorySerializer, BannerSerializer, IndexCategorySerializer
+from .models import Goods,GoodsCategory,Banner
+from .filters import GoodsFilter
 # Create your views here.
 
 
@@ -32,6 +33,13 @@ class GoodsListViewSet(mixins.ListModelMixin,mixins.RetrieveModelMixin, viewsets
     # filter_fields = ('name', 'goods_brief', 'goods_desc')
     search_fields = ('name', 'goods_brief', 'goods_desc')
     ordering_fields = ('sold_num', 'shop_price')
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.click_num += 1
+        instance.save()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 
 class CategoryViewSet(mixins.ListModelMixin,mixins.RetrieveModelMixin, viewsets.GenericViewSet):

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Goods, GoodsCategory,GoodsImage, Banner, GoodsCategoryBrand
+from .models import Goods, GoodsCategory,GoodsImage, IndexAd, Banner, GoodsCategoryBrand
 from django.db.models import Q
 
 
@@ -60,13 +60,16 @@ class IndexCategorySerializer(serializers.ModelSerializer):
     sub_cat = CategorySerializer2(many=True)
 
     def get_ad_goods(self,obj):
-        goods = {}
-
-
+        goods_json = {}
+        ad_goods = IndexAd.objects.filter(category_id=obj.id)
+        if ad_goods:
+            good_ins = ad_goods[0].goods
+            goods_json = GoodsSerializer(good_ins,many=False,context={'request': self.context['request']}).data
+        return goods_json
 
     def get_goods(self,obj):
         all_goods = Goods.objects.filter(Q(category_id=obj.id)|Q(category__parent_category_id=obj.id)|Q(category__parent_category__parent_category_id=obj.id))
-        goods_serializer = GoodsSerializer(all_goods,many=True)
+        goods_serializer = GoodsSerializer(all_goods,many=True,context={'request': self.context['request']})
         return goods_serializer.data
 
     class Meta:

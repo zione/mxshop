@@ -6,7 +6,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from .models import UserFav, UserLeavingMessage,UserAddress
 from .serializers import UserFavSerializer,UserFaveDetailSerializer, LeavingMessageSerializer, AddressSerializer
-from utils.permissions import IsOwnerOrReadOnly
+from apps.utils.permissions import IsOwnerOrReadOnly
 # Create your views here.
 
 
