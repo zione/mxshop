@@ -4,6 +4,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly,IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 from rest_framework import mixins
+from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from utils.permissions import IsOwnerOrReadOnly
@@ -71,3 +72,23 @@ class OrderViewset(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.Li
             return OrderDetailSerializer
         else:
             return OrderSerializer
+
+
+class AlipayView(APIView):
+
+    def get(self,request):
+        """
+        处理支付宝的return url 返回
+        :param request:
+        :return:
+        """
+        pass
+
+    def post(self,request):
+        """
+        处理支付宝的notify url
+        :param request:
+        :return:
+        """
+
+        pass

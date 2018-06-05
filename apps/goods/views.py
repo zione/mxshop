@@ -6,8 +6,8 @@ from rest_framework import filters
 from rest_framework.authentication import TokenAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
 
-from goods.serializer import GoodsSerializer, CategorySerializer
-from goods.models import Goods,GoodsCategory
+from goods.serializer import GoodsSerializer, CategorySerializer, BannerSerializer, IndexCategorySerializer
+from goods.models import Goods,GoodsCategory,Banner
 from goods.filters import GoodsFilter
 # Create your views here.
 
@@ -41,4 +41,24 @@ class CategoryViewSet(mixins.ListModelMixin,mixins.RetrieveModelMixin, viewsets.
     """
     queryset = GoodsCategory.objects.all()
     serializer_class = CategorySerializer
+
+
+class BannerViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    list:
+        商品分类列表
+    """
+    queryset = Banner.objects.all()
+    serializer_class = BannerSerializer
+
+
+class IndexCategoryViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    首页商品分类数据
+    """
+    queryset = GoodsCategory.objects.filter(is_tab=True,name__in=["生鲜食品","酒水饮料"])
+    serializer_class = IndexCategorySerializer
+
+
+
 

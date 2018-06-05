@@ -30,9 +30,9 @@ from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
 import  DjangoUeditor
 
-from goods.views import GoodsListViewSet, CategoryViewSet
+from goods.views import GoodsListViewSet, CategoryViewSet, BannerViewSet, IndexCategoryViewset
 from users.views import SmsCodeViewset,UserViewset
-from trade.views import ShoppingCartViewset,OrderViewset
+from trade.views import ShoppingCartViewset,OrderViewset, AlipayView
 from user_operation.views import UserFavViewset, LeavingMessageViewset,AddressViewset
 
 router = DefaultRouter()
@@ -54,6 +54,10 @@ router.register('address', AddressViewset, base_name='address')
 router.register('shopcarts', ShoppingCartViewset, base_name='shopcarts')
 # 订单
 router.register('orders', OrderViewset, base_name='orders')
+# 轮播图
+router.register('banners', BannerViewSet, base_name='banners')
+# 首页商品系列数据
+router.register('indexgoods', IndexCategoryViewset, base_name='indexgoods')
 
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
@@ -65,6 +69,7 @@ urlpatterns = [
     path('api-token-auth/', views.obtain_auth_token),
     #
     path('login/', obtain_jwt_token),
+    path('alipay/return/', AlipayView.as_view(), name='alipay')
 ]
 
 urlpatterns += static('/media/', document_root=MEDIA_ROOT)  #加上这一行
