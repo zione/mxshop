@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-from apps.user_operation.models import UserFav
+from .models import UserFav
 
 
 @receiver(post_save, sender=UserFav)

@@ -13,12 +13,12 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import sys
 import datetime
+import djcelery
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0,BASE_DIR)
 sys.path.insert(0,os.path.join(BASE_DIR,'apps'))
 sys.path.insert(0,os.path.join(BASE_DIR,'extra_apps'))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -53,7 +53,9 @@ INSTALLED_APPS = [
     'xadmin',
     'rest_framework',
     'corsheaders',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'social_django',
+    'djcelery',
 ]
 
 MIDDLEWARE = [
@@ -81,6 +83,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -161,6 +165,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR,"media")
 
 AUTHENTICATION_BACKENDS = (
     'users.views.CustomBackend',
+    'social_core.backends.weibo.WeiboOAuth2',
+    'social_core.backends.qq.QQOAuth2',
+    'social_core.backends.weixin.WeixinOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 REST_FRAMEWORK = {
@@ -168,7 +176,31 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_THROTTLE_CLASSES': (
+      'rest_framework.throttling.AnonRateThrottle',
+      'rest_framework.throttling.UserRateThrottle',
+    ),
+    "DEFAULT_THROTTLE_RATES": {
+        'anon': '2/minute',
+        'user': '4/minute'
+    }
+}
+
+REST_FRAMEWORK_EXTENSIONS = {
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 5
+}
+
+#配置redis缓存
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        # "LOCATION": "redis://:hy546800@127.0.0.1:6379",
+        "LOCATION": "redis://127.0.0.1:6379",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        }
+    }
 }
 
 JWT_AUTH ={
@@ -180,3 +212,20 @@ JWT_AUTH ={
 #手机号码正则表达式
 REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
 APIKEY = "d6c4ddbf50ab36611d2f52041a0b949e"
+
+#第三方登录配置
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/index/'
+
+SOCIAL_AUTH_WEIBO_KEY = '3475867713'
+SOCIAL_AUTH_WEIBO_SECRET = 'ecc2fb9ad6f49b0401ac82a13a1ad83a'
+
+SOCIAL_AUTH_WEIXIN_KEY = ''
+SOCIAL_AUTH_WEIXIN_SECRET = ''
+
+SOCIAL_AUTH_QQ_KEY = ''
+SOCIAL_AUTH_QQ_SECRET = ''
+
+# 异步任务
+djcelery.setup_loader()
+BROKER_URL= 'amqp://guest@localhost//'
+CELERY_RESULT_BACKEND = 'amqp://guest@localhost//'

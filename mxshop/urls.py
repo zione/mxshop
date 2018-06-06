@@ -69,7 +69,9 @@ urlpatterns = [
     path('api-token-auth/', views.obtain_auth_token),
     #
     path('login/', obtain_jwt_token),
-    path('alipay/return/', AlipayView.as_view(), name='alipay')
+    path('alipay/return/', AlipayView.as_view(), name='alipay'),
+    # 第三方登录
+    path("", include('social_django.urls',namespace='social'))
 ]
 
 urlpatterns += static('/media/', document_root=MEDIA_ROOT)  #加上这一行
