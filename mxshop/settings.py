@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import sys
 import datetime
-import djcelery
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0,BASE_DIR)
@@ -55,7 +54,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework.authtoken',
     'social_django',
-    'djcelery',
 ]
 
 MIDDLEWARE = [
@@ -195,8 +193,7 @@ REST_FRAMEWORK_EXTENSIONS = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        # "LOCATION": "redis://:hy546800@127.0.0.1:6379",
-        "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": "redis://:hy546800@127.0.0.1:6379",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient"
         }
@@ -226,6 +223,20 @@ SOCIAL_AUTH_QQ_KEY = ''
 SOCIAL_AUTH_QQ_SECRET = ''
 
 # 异步任务
-djcelery.setup_loader()
-BROKER_URL= 'amqp://guest@localhost//'
-CELERY_RESULT_BACKEND = 'amqp://guest@localhost//'
+from celery.schedules import crontab
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672'
+
+CELERY_BEAT_SCHEDULE = {
+    # 周期性任务
+    'task-one': {
+        'task': 'goods.tasks.loop_task',
+        'schedule': 5.0, # 每5秒执行一次
+        # 'args': ()
+    },
+    # 定时任务
+    'task-two': {
+        'task': 'goods.tasks.loop_task',
+        'schedule': crontab(minute=0, hour='*/3,10-19'),
+        # 'args': ()
+    }
+}

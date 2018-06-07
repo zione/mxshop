@@ -10,7 +10,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.mixins import CreateModelMixin
-from rest_framework_jwt.serializers import jwt_decode_handler,jwt_payload_handler
+from rest_framework_jwt.serializers import jwt_encode_handler,jwt_payload_handler
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from users.models import VerifyCode
@@ -101,7 +101,7 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
 
         re_dict = serializer.data
         payload = jwt_payload_handler(user)
-        re_dict["token"] = jwt_decode_handler(payload)
+        re_dict["token"] = jwt_encode_handler(payload)
         re_dict["name"] = user.name if user.name else user.username
 
         headers = self.get_success_headers(serializer.data)

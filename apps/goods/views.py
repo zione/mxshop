@@ -9,7 +9,6 @@ from rest_framework.authentication import TokenAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
-
 from .tasks import say_hello
 from .serializer import GoodsSerializer, CategorySerializer, BannerSerializer, IndexCategorySerializer
 from .models import Goods,GoodsCategory,Banner
@@ -44,8 +43,6 @@ class GoodsListViewSet(CacheResponseMixin, mixins.ListModelMixin,mixins.Retrieve
         instance.click_num += 1
         instance.save()
         serializer = self.get_serializer(instance)
-
-        # 异步任务
         say_hello.delay("huangyi")
         return Response(serializer.data)
 
